@@ -1,0 +1,211 @@
+<c-card class="mb-4 view-border--none">
+  <h2>International Travellers' Health Surveillance Form</h2>
+
+  <p>
+    Providing the following information to a Port Health Officer is required under the Public Health Act CAP 242 of the
+    laws of Kenya, and is being collected as part of public health response to the Corona Virus pandemic.
+  </p>
+</c-card>
+
+<br />
+<form class="view-form" name="create_traveller" id="create_traveller" (ngSubmit)="onSubmit()" #NewTraveller="ngForm">
+  <c-row>
+    <c-col>
+      <p>Nationality</p>
+
+      <mat-form-field>
+        <mat-select>
+          <mat-option *ngFor="let nationality of nationalities" [value]="nationality.value">
+            {{ nationality.viewValue }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </c-col>
+
+    <c-col>
+      <p>Identity Type</p>
+
+      <mat-form-field>
+        <mat-select [(ngModel)]="TravellerInstance._identity_type" name="_identity_type" #_identity_type="ngModel">
+          <mat-option *ngFor="let identity_type of identity_types" [value]="identity_type.value">
+            {{ identity_type.viewValue }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </c-col>
+
+    <c-col>
+      <p>Identity Number</p>
+
+      <mat-form-field>
+        <input matInput [(ngModel)]="TravellerInstance._identity_number" name="_identity_number" #middle_name="ngModel"
+          value="">
+      </mat-form-field>
+    </c-col>
+  </c-row>
+
+  <c-row>
+    <c-col>
+      <p>First Name</p>
+      <mat-form-field>
+        <input matInput [(ngModel)]="TravellerInstance.doc['first_name']" name="first_name" #first_name="ngModel"
+          value="">
+      </mat-form-field>
+    </c-col>
+
+    <c-col>
+      <p>Middle Name</p>
+      <mat-form-field>
+        <input matInput [(ngModel)]="TravellerInstance.doc['middle_name']" name="middle_name" #middle_name="ngModel"
+          value="">
+      </mat-form-field>
+    </c-col>
+
+    <c-col>
+      <p>Last Name</p>
+      <mat-form-field>
+        <input matInput [(ngModel)]="TravellerInstance.doc['last_name']" name="last_name" #last_name="ngModel" value="">
+      </mat-form-field>
+    </c-col>
+  </c-row>
+
+  <c-row>
+    <c-col>
+      <p>Gender</p>
+      <mat-form-field>
+        <mat-select [(ngModel)]="TravellerInstance.doc['gender']" name="gender" #gender="ngModel">
+          <mat-option *ngFor="let gender of genders" [value]="gender.value">
+            {{ gender.viewValue }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </c-col>
+
+    <c-col>
+      <p>Date of Birth</p>
+      <mat-form-field class="example-full-width">
+        <input matInput [matDatepicker]="picker" [(ngModel)]="TravellerInstance.doc['dob']" name="dob" #dob="ngModel">
+        <mat-datepicker-toggle matSuffix [for]="picker">
+          <i class="fa fa-calendar"></i>
+        </mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+    </c-col>
+  </c-row>
+
+  <c-row>
+    <c-col>
+      <c-row>
+        <p>Occupation</p>
+        <mat-form-field>
+          <input matInput value="">
+        </mat-form-field>
+      </c-row>
+    </c-col>
+  </c-row>
+
+  <c-row>
+    <c-col>
+      <p>Date of Arrival</p>
+      <mat-form-field>
+        <input matInput [matDatepicker]="picker">
+        <mat-datepicker-toggle matSuffix [for]="picker">
+          <i class="fa fa-calendar"></i>
+        </mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+    </c-col>
+
+    <c-col>
+      <p>Point of Entry</p>
+      <mat-form-field>
+        <mat-select>
+          <mat-option *ngFor="let nationality of nationalities" [value]="nationality.value">
+            {{ nationality.viewValue }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </c-col>
+  </c-row>
+
+  <c-row>
+    <c-col>
+      <p>Country of Departure</p>
+      <mat-form-field>
+        <mat-select>
+          <mat-option *ngFor="let nationality of nationalities" [value]="nationality.value">
+            {{ nationality.viewValue }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </c-col>
+
+    <c-col>
+      <p>Town / City of Departure</p>
+      <mat-form-field>
+        <mat-select>
+          <mat-option *ngFor="let nationality of nationalities" [value]="nationality.value">
+            {{ nationality.viewValue }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </c-col>
+  </c-row>
+
+  <c-row>
+    <c-col>
+      <p>Mode of Transport</p>
+      <mat-form-field>
+        <mat-select>
+          <mat-option value="land">Land</mat-option>
+          <mat-option value="sea">Sea</mat-option>
+          <mat-option value="air">Air</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </c-col>
+
+    <c-col>
+      <p>Conveyance Registration Number</p>
+      <mat-form-field>
+        <input matInput value="">
+      </mat-form-field>
+    </c-col>
+
+    <c-col>
+      <p>Seat Number</p>
+      <mat-form-field>
+        <input matInput value="">
+      </mat-form-field>
+    </c-col>
+  </c-row>
+
+  <c-row>
+    <c-col>
+      <p>Purpose of Travel to Kenya</p>
+      <mat-form-field>
+        <mat-select>
+          <mat-option value="resident">Resident</mat-option>
+          <mat-option value="touring">Touring</mat-option>
+          <mat-option value="transit">Transit</mat-option>
+          <mat-option value="business">Business</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </c-col>
+  </c-row>
+
+  <div class="view-align--right">
+    <div class="view-padding--vertical" *ngIf="TravellerInstance._api_response['result'] == '1'">
+      <i class="fa fa-check-circle view-color--green"></i> Details submitted successfully
+    </div>
+    
+    <div class="view-padding--vertical" *ngIf="TravellerInstance._api_response['result'] == '-1'">
+      <i class="fa fa-exclamation-circle view-color--red"></i> Failed! Kindly check and try again, if you had submitted your information before retrieve them ~here~.
+    </div>
+
+    <button type="submit" form="create_traveller" mat-raised-button color="primary">
+      <!-- <i class="fa fa-circle-notch fa-spin fa-lg" *ngIf="TravellerInstance._processing"></i> -->
+      Submit 
+    </button>
+  </div>
+</form>
+
