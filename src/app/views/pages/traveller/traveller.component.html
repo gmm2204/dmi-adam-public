@@ -1,0 +1,53 @@
+<div class="bg-light min-vh-100 d-flex flex-row align-items-center">
+  <c-container>
+    <c-row class="justify-content-center">
+      <c-col lg="7" md="9" xl="6">
+        <c-card class="mx-4">
+          <c-card-body class="p-4">
+            <form cForm>
+              <h1>Travellers Health Surveillance Form</h1>
+              <p class="text-medium-emphasis">Providing the following information to a Port Health Officer is required
+                under the Public Health Act CAP 242 of the laws of Kenya, and is being collected as part of public
+                health response an emergency outbreak.</p>
+              <c-input-group class="mb-3">
+                <input autoComplete="name" cFormControl placeholder="First Name" />
+              </c-input-group>
+
+              <c-input-group class="mb-3">
+                <input autoComplete="name" cFormControl placeholder="Middle Name" />
+              </c-input-group>
+
+              <c-input-group class="mb-3">
+                <input autoComplete="name" cFormControl placeholder="Last Name" />
+              </c-input-group>
+
+              <c-input-group class="mb-3">
+                <select aria-label="Default select example" cSelect>
+                  <option disabled>Open this select menu</option>
+                  <option value="1">Male</option>
+                  <option value="2">Female</option>
+                </select>
+              </c-input-group>
+
+              <c-input-group>
+                <mat-form-field>
+                  <mat-date-range-input [rangePicker]="picker">
+                    <input matStartDate placeholder="Start date">
+                    <input matEndDate placeholder="End date">
+                  </mat-date-range-input>
+          
+                  <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-date-range-picker #picker></mat-date-range-picker>
+                </mat-form-field>
+              </c-input-group>
+
+              <div class="d-grid">
+                <button cButton color="success">Submit</button>
+              </div>
+            </form>
+          </c-card-body>
+        </c-card>
+      </c-col>
+    </c-row>
+  </c-container>
+</div>
