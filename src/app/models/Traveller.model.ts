@@ -14,7 +14,7 @@ export class Traveller {
   _api_response: MKeyValue = {};
 
   constructor(private http: HttpClient) {
-
+    this._id = -1;
   }
 
   createInstance() {

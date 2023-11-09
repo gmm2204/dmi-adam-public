@@ -9,8 +9,32 @@ import { RegisterComponent } from './views/pages/register/register.component';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'traveller/register',
+    redirectTo: 'traveller/registration',
     pathMatch: 'full'
+  },
+  {
+    path: '',
+    component: DefaultLayoutComponent,
+    data: {
+      title: 'Traveller'
+    },
+    children: [
+      {
+        path: 'traveller/registration',
+        loadChildren: () =>
+          import('./views/traveller/registration/registration.module').then((m) => m.RegistrationModule)
+      },
+      {
+        path: 'traveller/check_up',
+        loadChildren: () =>
+          import('./views/traveller/check_up/check_up.module').then((m) => m.CheckUpModule)
+      },
+      {
+        path: 'traveller/follow_up',
+        loadChildren: () =>
+          import('./views/traveller/follow_up/follow_up.module').then((m) => m.FollowUpModule)
+      }
+    ]
   },
   {
     path: '',
@@ -71,7 +95,17 @@ const routes: Routes = [
       {
         path: 'traveller/register',
         loadChildren: () =>
-          import('./views/traveller/register/register.module').then((m) => m.RegisterModule)
+          import('./views/traveller/registration/registration.module').then((m) => m.RegistrationModule)
+      },
+      {
+        path: 'traveller/check_up',
+        loadChildren: () =>
+          import('./views/traveller/check_up/check_up.module').then((m) => m.CheckUpModule)
+      },
+      {
+        path: 'traveller/follow_up',
+        loadChildren: () =>
+          import('./views/traveller/follow_up/follow_up.module').then((m) => m.FollowUpModule)
       }
     ]
   },
