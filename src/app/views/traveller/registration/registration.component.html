@@ -1,0 +1,585 @@
+<c-card class="mb-4 view-border--none">
+  <h2>International Travellers' Health Surveillance Form</h2>
+
+  <p>
+    Providing the following information to a Port Health Officer is required under the Public Health Act CAP 242 of the
+    laws of Kenya, and is being collected as part of public health response to the Corona Virus pandemic.
+  </p>
+</c-card>
+
+<br />
+
+<form class="view-form" name="form_traveller_register" id="form_traveller_register" (ngSubmit)="onSubmit()"
+  #NewTraveller="ngForm">
+  <c-row>
+    <c-col>
+      <p>Nationality</p>
+
+      <mat-form-field>
+        <mat-select [(ngModel)]="TravellerInstance.doc['traveller_nationality']"
+          [formControl]="FCTraveller['traveller_nationality']" [errorStateMatcher]="matcher"
+          name="traveller_nationality">
+          <mat-option *ngFor="let nationality of nationalities" [value]="nationality.value">
+            {{ nationality.viewValue }}
+          </mat-option>
+        </mat-select>
+
+        <mat-error *ngIf="FCTraveller['traveller_nationality'].hasError('required')">
+          <strong>Required</strong>
+        </mat-error>
+      </mat-form-field>
+    </c-col>
+
+    <c-col>
+      <p>Identity Type</p>
+
+      <mat-form-field>
+        <mat-select [(ngModel)]="TravellerInstance._identity_type" [formControl]="FCTraveller['_identity_type']"
+          [errorStateMatcher]="matcher" name="_identity_type">
+          <mat-option *ngFor="let identity_type of identity_types" [value]="identity_type.value">
+            {{ identity_type.viewValue }}
+          </mat-option>
+        </mat-select>
+
+        <mat-error *ngIf="FCTraveller['_identity_type'].hasError('required')">
+          <strong>Required</strong>
+        </mat-error>
+      </mat-form-field>
+    </c-col>
+
+    <c-col>
+      <p>Identity Number *</p>
+
+      <mat-form-field>
+        <input matInput [formControl]="FCTraveller['_identity_number']" [errorStateMatcher]="matcher"
+          [(ngModel)]="TravellerInstance._identity_number">
+
+        <mat-error *ngIf="FCTraveller['_identity_number'].hasError('required')">
+          <strong>Required</strong>
+        </mat-error>
+      </mat-form-field>
+    </c-col>
+  </c-row>
+
+  <!-- Traveller Name -->
+  <c-row>
+    <c-col>
+      <p>First Name *</p>
+      <mat-form-field>
+        <input matInput [formControl]="FCTraveller['traveller_first_name']" [errorStateMatcher]="matcher"
+          [(ngModel)]="TravellerInstance.doc['traveller_first_name']">
+
+        <mat-error *ngIf="FCTraveller['traveller_first_name'].hasError('required')">
+          <strong>Required</strong>
+        </mat-error>
+      </mat-form-field>
+    </c-col>
+
+    <c-col>
+      <p>Middle Name</p>
+      <mat-form-field>
+        <input matInput [formControl]="FCTraveller['traveller_middle_name']" [errorStateMatcher]="matcher"
+          [(ngModel)]="TravellerInstance.doc['traveller_middle_name']">
+      </mat-form-field>
+    </c-col>
+
+    <c-col>
+      <p>Last Name *</p>
+      <mat-form-field>
+        <input matInput [formControl]="FCTraveller['traveller_last_name']" [errorStateMatcher]="matcher"
+          [(ngModel)]="TravellerInstance.doc['traveller_last_name']">
+
+        <mat-error *ngIf="FCTraveller['traveller_last_name'].hasError('required')">
+          <strong>Required</strong>
+        </mat-error>
+      </mat-form-field>
+    </c-col>
+  </c-row>
+
+  <!-- Traveller Gender and DOB -->
+  <c-row>
+    <c-col>
+      <p>Gender *</p>
+      <mat-form-field>
+        <mat-select [(ngModel)]="TravellerInstance.doc['traveller_gender']"
+          [formControl]="FCTraveller['traveller_gender']" [errorStateMatcher]="matcher">
+          <mat-option *ngFor="let gender of genders" [value]="gender.value">
+            {{ gender.viewValue }}
+          </mat-option>
+        </mat-select>
+
+        <mat-error *ngIf="FCTraveller['traveller_gender'].hasError('required')">
+          <strong>Required</strong>
+        </mat-error>
+      </mat-form-field>
+    </c-col>
+
+    <c-col>
+      <p>Date of Birth *</p>
+      <mat-form-field class="example-full-width">
+        <input matInput [matDatepicker]="traveller_dob" [(ngModel)]="TravellerInstance.doc['traveller_dob']"
+          [formControl]="FCTraveller['traveller_dob']" [errorStateMatcher]="matcher">
+
+        <mat-datepicker-toggle matSuffix [for]="traveller_dob">
+          <i class="fa fa-calendar"></i>
+        </mat-datepicker-toggle>
+
+        <mat-datepicker #traveller_dob></mat-datepicker>
+
+        <mat-error *ngIf="FCTraveller['traveller_dob'].hasError('required')">
+          <strong>Required</strong>
+        </mat-error>
+      </mat-form-field>
+    </c-col>
+  </c-row>
+
+  <!-- Occupation -->
+  <c-row>
+    <c-col>
+      <c-row>
+        <p>Occupation *</p>
+        <mat-form-field>
+          <input matInput [formControl]="FCTraveller['traveller_occupation']" [errorStateMatcher]="matcher"
+            [(ngModel)]="TravellerInstance.doc['traveller_occupation']">
+
+          <mat-error *ngIf="FCTraveller['traveller_occupation'].hasError('required')">
+            <strong>Required</strong>
+          </mat-error>
+        </mat-form-field>
+      </c-row>
+    </c-col>
+  </c-row>
+
+  <!-- Point of Entry and Date of arrival -->
+  <c-row>
+    <c-col>
+      <p>Date of Arrival *</p>
+      <mat-form-field>
+        <input matInput [matDatepicker]="traveller_date_arrival"
+          [(ngModel)]="TravellerInstance.doc['traveller_date_arrival']"
+          [formControl]="FCTraveller['traveller_date_arrival']" [errorStateMatcher]="matcher">
+
+        <mat-datepicker-toggle matSuffix [for]="traveller_date_arrival">
+          <i class="fa fa-calendar"></i>
+        </mat-datepicker-toggle>
+
+        <mat-datepicker #traveller_date_arrival></mat-datepicker>
+
+        <mat-error *ngIf="FCTraveller['traveller_date_arrival'].hasError('required')">
+          <strong>Required</strong>
+        </mat-error>
+      </mat-form-field>
+    </c-col>
+
+    <c-col>
+      <p>Point of Entry *</p>
+
+      <mat-form-field>
+        <input matInput [formControl]="FCTraveller['traveller_poe']" [errorStateMatcher]="matcher"
+          [(ngModel)]="TravellerInstance.doc['traveller_poe']">
+
+        <mat-error *ngIf="FCTraveller['traveller_poe'].hasError('required')">
+          <strong>Required</strong>
+        </mat-error>
+      </mat-form-field>
+    </c-col>
+  </c-row>
+
+  <!-- Departure Countr and Town -->
+  <c-row>
+    <c-col>
+      <p>Country of Departure *</p>
+      <mat-form-field>
+        <input matInput [formControl]="FCTraveller['traveller_departure_country']" [errorStateMatcher]="matcher"
+          [(ngModel)]="TravellerInstance.doc['traveller_departure_country']">
+
+        <mat-error *ngIf="FCTraveller['traveller_departure_country'].hasError('required')">
+          <strong>Required</strong>
+        </mat-error>
+      </mat-form-field>
+    </c-col>
+
+    <c-col>
+      <p>City / Town of Departure *</p>
+
+      <mat-form-field>
+        <input matInput [formControl]="FCTraveller['traveller_departure_town']" [errorStateMatcher]="matcher"
+          [(ngModel)]="TravellerInstance.doc['traveller_departure_town']">
+
+        <mat-error *ngIf="FCTraveller['traveller_departure_town'].hasError('required')">
+          <strong>Required</strong>
+        </mat-error>
+      </mat-form-field>
+    </c-col>
+  </c-row>
+
+  <!-- Conveyance -->
+  <c-row>
+    <c-col>
+      <p>Conveyance Mode * </p>
+      <mat-form-field>
+        <mat-select [(ngModel)]="TravellerInstance.doc['traveller_conveyance_mode']"
+          [formControl]="FCTraveller['traveller_conveyance_mode']" [errorStateMatcher]="matcher">
+          <mat-option value="land">Land</mat-option>
+          <mat-option value="sea">Sea</mat-option>
+          <mat-option value="air">Air</mat-option>
+        </mat-select>
+
+        <mat-error *ngIf="FCTraveller['traveller_conveyance_mode'].hasError('required')">
+          <strong>Required</strong>
+        </mat-error>
+      </mat-form-field>
+    </c-col>
+
+    <c-col>
+      <p>Conveyance Number <span class="view-text--hint">e.g. ticker number</span></p>
+      <mat-form-field>
+        <input matInput [formControl]="FCTraveller['converyance_number']" [errorStateMatcher]="matcher"
+          [(ngModel)]="TravellerInstance.doc['converyance_number']">
+      </mat-form-field>
+    </c-col>
+
+    <c-col>
+      <p>Conveyance Seat Number</p>
+      <mat-form-field>
+        <input matInput [formControl]="FCTraveller['conveyance_seat_number']" [errorStateMatcher]="matcher"
+          [(ngModel)]="TravellerInstance.doc['conveyance_seat_number']">
+      </mat-form-field>
+    </c-col>
+  </c-row>
+
+  <!-- Travel Purpose -->
+  <c-row>
+    <c-col>
+      <p>Purpose of Travel to Kenya</p>
+      <mat-form-field>
+        <mat-select [(ngModel)]="TravellerInstance.doc['traveller_travel_purpose']"
+          [formControl]="FCTraveller['traveller_travel_purpose']" [errorStateMatcher]="matcher">
+          <mat-option value="resident">Resident</mat-option>
+          <mat-option value="touring">Touring</mat-option>
+          <mat-option value="transit">Transit</mat-option>
+          <mat-option value="business">Business</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </c-col>
+  </c-row>
+
+  <!-- Phone Number, Email Address -->
+  <c-row>
+    <c-col>
+      <p>Kenyan Phone Number</p>
+      <mat-form-field>
+        <input matInput [formControl]="FCTraveller['traveller_phone_number_kenyan']" [errorStateMatcher]="matcher"
+          [(ngModel)]="TravellerInstance.doc['traveller_phone_number_kenyan']">
+      </mat-form-field>
+    </c-col>
+
+    <c-col>
+      <p>Email Address</p>
+      <mat-form-field>
+        <input matInput [formControl]="FCTraveller['traveller_email_address']" [errorStateMatcher]="matcher"
+          [(ngModel)]="TravellerInstance.doc['traveller_email_address']">
+      </mat-form-field>
+    </c-col>
+
+    <c-col>
+      <p>Postal Address</p>
+      <mat-form-field>
+        <input matInput [formControl]="FCTraveller['traveller_postal_address']" [errorStateMatcher]="matcher"
+          [(ngModel)]="TravellerInstance.doc['traveller_postal_address']">
+      </mat-form-field>
+    </c-col>
+  </c-row>
+
+  <!-- Travel to Uganda -->
+  <c-row>
+    <c-col>
+      <p>Have you travelled to Uganda in the las three days?</p>
+      <mat-form-field>
+        <mat-select [(ngModel)]="TravellerInstance.doc['traveller_travel_uganda']"
+          [formControl]="FCTraveller['traveller_travel_uganda']" [errorStateMatcher]="matcher">
+          <mat-option value="yes">Yes</mat-option>
+          <mat-option value="no">No</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </c-col>
+  </c-row>
+
+  <c-row *ngIf="TravellerInstance.doc['traveller_travel_uganda'] == 'yes'">
+    <c-col>
+      <p>While in Uganda, have you been to Mubende District or its neighboring districts in the last 21 days (3 weeks)?
+      </p>
+      <mat-form-field>
+        <mat-select [(ngModel)]="TravellerInstance.doc['traveller_travel_mubende']"
+          [formControl]="FCTraveller['traveller_travel_mubende']" [errorStateMatcher]="matcher">
+          <mat-option value="yes">Yes</mat-option>
+          <mat-option value="no">No</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </c-col>
+  </c-row>
+
+  <!-- Mubende Districts -->
+  <c-row *ngIf="TravellerInstance.doc['traveller_travel_mubende'] == 'yes'">
+    <c-col>
+      <p>Which are the exact places (Sub-Counties/Counties/Towns) you visited</p>
+      <mat-form-field>
+        <input matInput [formControl]="FCTraveller['traveller_travel_mubende_locations']" [errorStateMatcher]="matcher"
+          [(ngModel)]="TravellerInstance.doc['traveller_travel_mubende_locations']">
+      </mat-form-field>
+    </c-col>
+  </c-row>
+
+  <!-- Mubende Duration -->
+  <c-row *ngIf="TravellerInstance.doc['traveller_travel_mubende'] == 'yes'">
+    <c-col>
+      <p>Period taken while in Mubende or Neighbouring districts</p>
+      <mat-form-field>
+        <input matInput [formControl]="FCTraveller['traveller_travel_mubende_duration']" [errorStateMatcher]="matcher"
+          [(ngModel)]="TravellerInstance.doc['traveller_travel_mubende_duration']">
+      </mat-form-field>
+    </c-col>
+  </c-row>
+
+  <!-- Taking care of a sick person -->
+  <c-row>
+    <c-col>
+      <p>During the last 21 days (3 weeks), have you participated in taking care of a sick person?</p>
+      <mat-form-field>
+        <mat-select [(ngModel)]="TravellerInstance.doc['traveller_patient_care']"
+          [formControl]="FCTraveller['traveller_patient_care']" [errorStateMatcher]="matcher">
+          <mat-option value="yes">Yes</mat-option>
+          <mat-option value="no">No</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </c-col>
+  </c-row>
+
+  <!-- Experienced Symptoms -->
+  <c-row>
+    <p>Have you experienced any of the following health problems during the last one (1) week?</p>
+
+    <c-col>
+      <p>Fever or hotness of the body</p>
+      <mat-form-field>
+        <mat-select [(ngModel)]="TravellerInstance.doc['traveller_fever']"
+          [formControl]="FCTraveller['traveller_fever']" [errorStateMatcher]="matcher">
+          <mat-option value="yes">Yes</mat-option>
+          <mat-option value="no">No</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </c-col>
+
+    <c-col>
+      <p>Diarrhea</p>
+      <mat-form-field>
+        <mat-select [(ngModel)]="TravellerInstance.doc['traveller_diarrhea']"
+          [formControl]="FCTraveller['traveller_diarrhea']" [errorStateMatcher]="matcher">
+          <mat-option value="yes">Yes</mat-option>
+          <mat-option value="no">No</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </c-col>
+  </c-row>
+
+  <c-row>
+    <c-col>
+      <p>Headache</p>
+
+      <mat-form-field>
+        <mat-select [(ngModel)]="TravellerInstance.doc['traveller_headache']"
+          [formControl]="FCTraveller['traveller_headache']" [errorStateMatcher]="matcher">
+          <mat-option value="yes">Yes</mat-option>
+          <mat-option value="no">No</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </c-col>
+
+    <c-col>
+      <p>Joint and Muscle pains</p>
+      <mat-form-field>
+        <mat-select [(ngModel)]="TravellerInstance.doc['traveller_joint_muscle_pains']"
+          [formControl]="FCTraveller['traveller_joint_muscle_pains']" [errorStateMatcher]="matcher">
+          <mat-option value="yes">Yes</mat-option>
+          <mat-option value="no">No</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </c-col>
+  </c-row>
+
+  <c-row>
+    <c-col>
+      <p>Done Pain</p>
+      <mat-form-field>
+        <mat-select [(ngModel)]="TravellerInstance.doc['traveller_bone_pain']"
+          [formControl]="FCTraveller['traveller_bone_pain']" [errorStateMatcher]="matcher">
+          <mat-option value="yes">Yes</mat-option>
+          <mat-option value="no">No</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </c-col>
+
+    <c-col>
+      <p>Unexplained Bruising</p>
+
+      <mat-form-field>
+        <mat-select [(ngModel)]="TravellerInstance.doc['traveller_unexplained_bruising']"
+          [formControl]="FCTraveller['traveller_unexplained_bruising']" [errorStateMatcher]="matcher">
+          <mat-option value="yes">Yes</mat-option>
+          <mat-option value="no">No</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </c-col>
+  </c-row>
+
+  <c-row>
+    <c-col>
+      <p>Unusual body weakness</p>
+
+      <mat-form-field>
+        <mat-select [(ngModel)]="TravellerInstance.doc['traveller_unusual_body_weakness']"
+          [formControl]="FCTraveller['traveller_unusual_body_weakness']" [errorStateMatcher]="matcher">
+          <mat-option value="yes">Yes</mat-option>
+          <mat-option value="no">No</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </c-col>
+
+    <c-col>
+      <p>Internal and external bleeding</p>
+
+      <mat-form-field>
+        <mat-select [(ngModel)]="TravellerInstance.doc['traveller_internal_external_bleeding']"
+          [formControl]="FCTraveller['traveller_internal_external_bleeding']" [errorStateMatcher]="matcher">
+          <mat-option value="yes">Yes</mat-option>
+          <mat-option value="no">No</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </c-col>
+  </c-row>
+
+  <c-row>
+    <c-col>
+      <p>Soreness or pain in the throat</p>
+
+      <mat-form-field>
+        <mat-select [(ngModel)]="TravellerInstance.doc['traveller_sore_painful_throat']"
+          [formControl]="FCTraveller['traveller_sore_painful_throat']" [errorStateMatcher]="matcher">
+          <mat-option value="yes">Yes</mat-option>
+          <mat-option value="no">No</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </c-col>
+
+    <c-col>
+      <p>Cough and vomiting</p>
+
+      <mat-form-field>
+        <mat-select [(ngModel)]="TravellerInstance.doc['traveller_cough_vomiting']"
+          [formControl]="FCTraveller['traveller_cough_vomiting']" [errorStateMatcher]="matcher">
+          <mat-option value="yes">Yes</mat-option>
+          <mat-option value="no">No</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </c-col>
+  </c-row>
+
+  <c-row>
+    <c-col>
+      <p>Common Cold</p>
+
+      <mat-form-field>
+        <mat-select [(ngModel)]="TravellerInstance.doc['traveller_common_cold']"
+          [formControl]="FCTraveller['traveller_common_cold']" [errorStateMatcher]="matcher">
+          <mat-option value="yes">Yes</mat-option>
+          <mat-option value="no">No</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </c-col>
+
+    <c-col>
+      <p>Weight Loss</p>
+
+      <mat-form-field>
+        <mat-select [(ngModel)]="TravellerInstance.doc['traveller_weight_loss']"
+          [formControl]="FCTraveller['traveller_weight_loss']" [errorStateMatcher]="matcher">
+          <mat-option value="yes">Yes</mat-option>
+          <mat-option value="no">No</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </c-col>
+  </c-row>
+
+  <!-- Kenyan residence, contact person -->
+  <c-row>
+    <c-col>
+      <p>Location where the case/traveller resided while in Kenya</p>
+      <mat-form-field>
+        <input matInput [formControl]="FCTraveller['traveller_kenyan_residence']" [errorStateMatcher]="matcher"
+          [(ngModel)]="TravellerInstance.doc['traveller_kenyan_residence']">
+      </mat-form-field>
+    </c-col>
+  </c-row>
+
+  <c-row>
+    <c-col>
+      <p>Name of your contact person (if not yourself)</p>
+      <mat-form-field>
+        <input matInput [formControl]="FCTraveller['traveller_contact_name']" [errorStateMatcher]="matcher"
+          [(ngModel)]="TravellerInstance.doc['traveller_contact_name']">
+      </mat-form-field>
+    </c-col>
+
+    <c-col>
+      <p>Contact Phone Number</p>
+      <mat-form-field>
+        <input matInput [formControl]="FCTraveller['traveller_contact_phone_number']" [errorStateMatcher]="matcher"
+          [(ngModel)]="TravellerInstance.doc['traveller_contact_phone_number']">
+      </mat-form-field>
+    </c-col>
+  </c-row>
+
+  <!-- Hotel, sub-location and county -->
+  <c-row>
+    <c-col>
+      <p>Village/House number/Hotel</p>
+      <mat-form-field>
+        <input matInput [formControl]="FCTraveller['traveller_village_house_hotel']"
+          [errorStateMatcher]="matcher" [(ngModel)]="TravellerInstance.doc['traveller_village_house_hotel']">
+      </mat-form-field>
+    </c-col>
+
+    <c-col>
+      <p>Sub-location / Estate</p>
+      <mat-form-field>
+        <input matInput [formControl]="FCTraveller['traveller_sub_location_estate']"
+          [errorStateMatcher]="matcher" [(ngModel)]="TravellerInstance.doc['traveller_sub_location_estate']">
+      </mat-form-field>
+    </c-col>
+
+    <c-col>
+      <p>County</p>
+      <mat-form-field>
+        <input matInput [formControl]="FCTraveller['traveller_county']" [errorStateMatcher]="matcher"
+          [(ngModel)]="TravellerInstance.doc['traveller_county']">
+      </mat-form-field>
+    </c-col>
+  </c-row>
+
+  <div class="view-align--right">
+    <div class="view-padding--vertical" *ngIf="TravellerInstance._api_response['result'] == '1'">
+      <i class="fa fa-check-circle view-color--green"></i> Details submitted successfully
+    </div>
+
+    <div class="view-padding--vertical" *ngIf="TravellerInstance._api_response['result'] == '-1'">
+      <i class="fa fa-exclamation-circle view-color--red"></i> Failed! Kindly check and try again, if you had submitted
+      your information before retrieve them ~here~.
+    </div>
+
+    <button type="submit" form="form_traveller_register" mat-raised-button color="primary"
+      *ngIf="TravellerInstance._api_response['result'] != '1'">
+      Submit
+    </button>
+  </div>
+
+</form>

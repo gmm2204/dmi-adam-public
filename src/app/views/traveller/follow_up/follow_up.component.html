@@ -1,0 +1,35 @@
+<c-card class="mb-4 view-border--none">
+  <h2>Traveller Follow-Up</h2>
+
+  <p>
+    Providing the following information to a Port Health Officer is required under the Public Health Act CAP 242 of the
+    laws of Kenya, and is being collected as part of public health response to the Corona Virus pandemic.
+  </p>
+</c-card>
+
+<br />
+
+<form class="view-form" name="form_traveller_fu_acquire" id="form_traveller_fu_acquire" (ngSubmit)="onSubmit()"
+  #NewTraveller="ngForm" *ngIf="TravellerInstance._id == -1">
+  <c-row>
+    <c-col>
+      <p>Traveller Number *</p>
+
+      <mat-form-field>
+        <input matInput [formControl]="FCTraveller['_identity_number']" [errorStateMatcher]="matcher"
+          [(ngModel)]="TravellerInstance._identity_number">
+
+        <mat-error *ngIf="FCTraveller['_identity_number'].hasError('required')">
+          <strong>Required</strong>
+        </mat-error>
+      </mat-form-field>
+    </c-col>
+    <c-col></c-col>
+  </c-row>
+
+  <div>
+    <button type="submit" form="form_traveller_fu_acquire" mat-raised-button color="primary">
+      Get Details
+    </button>
+  </div>
+</form>

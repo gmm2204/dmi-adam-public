@@ -1,30 +1,21 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { FormControl, Validators } from '@angular/forms';
+
 import { MErrorStateMatcher } from '../../../models/MErrorStateMatcher.model';
-
-import { ErrorStateMatcher } from '@angular/material/core';
-import { NgIf } from '@angular/common';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
-
 import { Traveller } from '../../../models/Traveller.model';
 import { KVFormControl } from '../../../models/KVFormControl.model';
-import {
-  FormControl,
-  FormGroupDirective,
-  NgForm,
-  Validators,
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
 
 @Component({
-  templateUrl: 'register.component.html',
-  styleUrls: ['register.component.scss']
+  templateUrl: 'follow_up.component.html',
+  styleUrls: ['follow_up.component.scss'],
 })
 
-export class RegisterComponent implements OnInit {
-  //#region Prerequisites
+export class FollowUpComponent implements OnInit {
+  matcher = new MErrorStateMatcher();
+  TravellerInstance = new Traveller(this.http);
+  FCTraveller: KVFormControl = {};
+
   genders = [
     { value: 'male', viewValue: 'Male' },
     { value: 'female', viewValue: 'Female' },
@@ -41,18 +32,6 @@ export class RegisterComponent implements OnInit {
     { value: 'kenya', viewValue: 'Kenya' },
     { value: 'other', viewValue: 'Other' },
   ];
-
-  TravellerInstance = new Traveller(this.http);
-  //#endregion
-
-  //#region Form Controls
-  FCTraveller: KVFormControl = {};
-  //#endregion
-
-  emailFormControl = new FormControl('', [Validators.required]);
-  FCFirstName = new FormControl('', [Validators.required]);
-  // emailFormControl = new FormControl('', [Validators.required, Validators.email]);
-  matcher = new MErrorStateMatcher();
 
   constructor(private http: HttpClient) { }
 
@@ -75,6 +54,7 @@ export class RegisterComponent implements OnInit {
       this.TravellerInstance.createInstance();
     }
   }
+
 
   seedFormControls() {
     this.FCTraveller["nationality"] = new FormControl('', [Validators.required]);
