@@ -185,7 +185,7 @@
     </c-col>
   </c-row>
 
-  <!-- Departure Countr and Town -->
+  <!-- Departure Country and Town -->
   <c-row>
     <c-col>
       <p>Country of Departure *</p>
@@ -544,16 +544,16 @@
     <c-col>
       <p>Village/House number/Hotel</p>
       <mat-form-field>
-        <input matInput [formControl]="FCTraveller['traveller_village_house_hotel']"
-          [errorStateMatcher]="matcher" [(ngModel)]="TravellerInstance.doc['traveller_village_house_hotel']">
+        <input matInput [formControl]="FCTraveller['traveller_village_house_hotel']" [errorStateMatcher]="matcher"
+          [(ngModel)]="TravellerInstance.doc['traveller_village_house_hotel']">
       </mat-form-field>
     </c-col>
 
     <c-col>
       <p>Sub-location / Estate</p>
       <mat-form-field>
-        <input matInput [formControl]="FCTraveller['traveller_sub_location_estate']"
-          [errorStateMatcher]="matcher" [(ngModel)]="TravellerInstance.doc['traveller_sub_location_estate']">
+        <input matInput [formControl]="FCTraveller['traveller_sub_location_estate']" [errorStateMatcher]="matcher"
+          [(ngModel)]="TravellerInstance.doc['traveller_sub_location_estate']">
       </mat-form-field>
     </c-col>
 
