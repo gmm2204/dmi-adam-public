@@ -30,6 +30,7 @@ import { ChartjsModule } from '@coreui/angular-chartjs';
 
 import { CheckUpRoutingModule } from './check_up-routing.module';
 import { CheckUpComponent } from './check_up.component';
+import {MatIconModule} from "@angular/material/icon";
 
 @NgModule({
   imports: [
@@ -59,7 +60,8 @@ import { CheckUpComponent } from './check_up.component';
     MatGridListModule,
     MatCardModule,
     MatButtonModule,
-    FormsModule
+    FormsModule,
+    MatIconModule
   ],
   declarations: [CheckUpComponent]
 })
