@@ -33,19 +33,6 @@ export class Traveller {
       });
   }
 
-  createChecku() {
-    console.log("doc", this.doc);
-    console.log("Id ",this._identity_number);
-    this.api.request(api_config.ENDPOINT_TRAVELLER + "/create-checkup",
-      {
-        "_traveller_id": this._identity_number,
-        "doc": this.doc,
-      },
-      (response: any) => {
-        this._api_response = response[0];
-        this._processing = false;
-      });
-  }
 
   getTravellerInstance(): Promise<any> {
     return new Promise((resolve, reject) => {
