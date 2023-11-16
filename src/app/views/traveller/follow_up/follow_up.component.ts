@@ -15,28 +15,16 @@ export class FollowUpComponent implements OnInit {
   matcher = new MErrorStateMatcher();
   TravellerInstance = new Traveller(this.http);
   FCTraveller: KVFormControl = {};
-
-  genders = [
-    { value: 'male', viewValue: 'Male' },
-    { value: 'female', viewValue: 'Female' },
-  ];
-
-  identity_types = [
-    { value: 'kenyan_id', viewValue: 'Kenyan ID' },
-    { value: 'alien_id', viewValue: 'Alien ID' },
-    { value: 'passport', viewValue: 'Passport' },
-    { value: 'birth_certificate', viewValue: 'Birth Certificate' },
-  ];
-
-  nationalities = [
-    { value: 'kenya', viewValue: 'Kenya' },
-    { value: 'other', viewValue: 'Other' },
-  ];
+  FCFollowup: KVFormControl = {};
+  retrievedData: any;
+  showCard: boolean = true;
+  protected readonly Object = Object;
 
   constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
     this.seedFormControls();
+    this.seedFollowupFormControls();
   }
 
   onSubmit(): void {
@@ -51,27 +39,69 @@ export class FollowUpComponent implements OnInit {
 
     if (is_valid) {
       this.TravellerInstance._processing = true;
-      this.TravellerInstance.createInstance();
+      this.TravellerInstance.getTravellerInstance()
+        .then((response) => {
+          this.retrievedData = response[0];
+
+          this.TravellerInstance._identity_number = this.retrievedData['_id'] ?? '';
+          this.seedFollowupFormControls()
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    }
+  }
+
+  onSubmitFollowup(): void {
+    let is_valid = true;
+
+    console.log(this.TravellerInstance)
+    Object.keys(this.FCFollowup).forEach(fc_key => {
+      if (this.FCFollowup[fc_key].hasError("required")) {
+        is_valid = false;
+        return;
+      }
+    });
+
+    if (is_valid) {
+      this.TravellerInstance._processing = true;
+      this.TravellerInstance.createFollowup()
+        .then((response) => {
+          this.retrievedData = response[0];
+
+          this.TravellerInstance._identity_number = this.retrievedData['_id'] ?? '';
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
     }
   }
 
 
   seedFormControls() {
-    this.FCTraveller["nationality"] = new FormControl('', [Validators.required]);
-    this.FCTraveller["_identity_type"] = new FormControl('', [Validators.required]);
-    this.FCTraveller["_identity_number"] = new FormControl('', [Validators.required]);
-    this.FCTraveller["first_name"] = new FormControl('', [Validators.required]);
-    this.FCTraveller["middle_name"] = new FormControl('', []);
-    this.FCTraveller["last_name"] = new FormControl('', [Validators.required]);
-    this.FCTraveller["gender"] = new FormControl('', [Validators.required]);
-    this.FCTraveller["dob"] = new FormControl('', [Validators.required]);
-    this.FCTraveller["occupation"] = new FormControl('', [Validators.required]);
-    this.FCTraveller["date_of_arrival"] = new FormControl('', [Validators.required]);
-    this.FCTraveller["entry_point"] = new FormControl('', [Validators.required]);
-    this.FCTraveller["departure_country"] = new FormControl('', [Validators.required]);
-    this.FCTraveller["departure_town"] = new FormControl('', [Validators.required]);
-    this.FCTraveller["transport_mode"] = new FormControl('', [Validators.required]);
-    this.FCTraveller["travel_purpose"] = new FormControl('', []);
+    this.FCTraveller["_id"] = new FormControl('', [Validators.required]);
+
   }
 
+  seedFollowupFormControls() {
+    this.FCFollowup["traveller_fever"] = new FormControl('', [Validators.required]);
+    this.FCFollowup["traveller_diarrhoea"] = new FormControl('', [Validators.required]);
+    this.FCFollowup["traveller_headache"] = new FormControl('', [Validators.required]);
+    this.FCFollowup["traveller_joint_muscle_pains"] = new FormControl('', [Validators.required]);
+    this.FCFollowup["traveller_bone_pain"] = new FormControl('', [Validators.required]);
+    this.FCFollowup["traveller_unexplained_bruising"] = new FormControl('', [Validators.required]);
+    this.FCFollowup["traveller_unusual_body_weakness"] = new FormControl('', [Validators.required]);
+    this.FCFollowup["traveller_internal_external_bleeding"] = new FormControl('', [Validators.required]);
+    this.FCFollowup["traveller_sore_painful_throat"] = new FormControl('', [Validators.required]);
+    this.FCFollowup["traveller_cough_vomiting"] = new FormControl('', [Validators.required]);
+    this.FCFollowup["traveller_common_cold"] = new FormControl('', [Validators.required]);
+    this.FCFollowup["traveller_weight_loss"] = new FormControl('', [Validators.required]);
+    this.FCFollowup["traveller_other_symptoms"] = new FormControl('', []);
+  }
+
+
+
+  toggleCard() {
+    this.showCard = !this.showCard;
+  }
 }

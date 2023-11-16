@@ -17,6 +17,7 @@ export class CheckUpComponent implements OnInit {
   TravellerInstance = new Traveller(this.http);
   CheckupInstance = new Traveller(this.http);
   FCTraveller: KVFormControl = {};
+  FCCheckup: KVFormControl = {};
   retrievedData: any;
   showCard: boolean = true;
 
@@ -45,10 +46,12 @@ export class CheckUpComponent implements OnInit {
   onSubmit(): void {
     let is_valid = true;
 
-    if(this.FCTraveller["_id"].hasError("required")){
-      is_valid = false;
-      return;
-    }
+    Object.keys(this.FCTraveller).forEach(fc_key => {
+      if (this.FCTraveller[fc_key].hasError("required")) {
+        is_valid = false;
+        return;
+      }
+    });
 
     if (is_valid) {
       this.TravellerInstance._processing = true;
@@ -58,7 +61,7 @@ export class CheckUpComponent implements OnInit {
           this.TravellerInstance._api_response = response[0];
 
           this.TravellerInstance._identity_number = this.retrievedData['_id'] ?? '';
-
+          this.seedCheckupFormControls();
         })
         .catch((error) => {
           console.error("Error:", error);
@@ -69,20 +72,20 @@ export class CheckUpComponent implements OnInit {
   onSubmitCheckup(): void {
     let is_valid = true;
 
-    if(this.FCTraveller["_id"].hasError("required")){
-      is_valid = false;
-      return;
-    }
+    Object.keys(this.FCCheckup).forEach(fc_key => {
+      if (this.FCCheckup[fc_key].hasError("required")) {
+        is_valid = false;
+        return;
+      }
+    });
 
     if (is_valid) {
       this.TravellerInstance._processing = true;
       this.TravellerInstance.createCheckup()
         .then((response) => {
           this.retrievedData = response[0];
-          // this.TravellerInstance._api_response = response;
 
           this.TravellerInstance._identity_number = this.retrievedData['_id'] ?? '';
-          console.log("Instabce", this.TravellerInstance._api_response)
         })
         .catch((error) => {
           console.error("Error:", error);
@@ -93,19 +96,14 @@ export class CheckUpComponent implements OnInit {
 
   seedFormControls() {
     this.FCTraveller["_id"] = new FormControl('', [Validators.required]);
-    // this.FCTraveller["traveller_body_temperature"] = new FormControl('', [Validators.required]);
-    // this.FCTraveller["traveller_case_classification"] = new FormControl('', [Validators.required]);
-    // this.FCTraveller["traveller_action_taken"] = new FormControl('', [Validators.required]);
-    // this.FCTraveller["traveller_checkup_date"] = new FormControl('', [Validators.required]);
-    // this.FCTraveller["_identity_number"] = new FormControl(this.retrievedData?._traveller_Id ?? '');
   }
 
   seedCheckupFormControls(): void{
-    this.FCTraveller["traveller_body_temperature"] = new FormControl('', [Validators.required]);
-    this.FCTraveller["traveller_case_classification"] = new FormControl('', [Validators.required]);
-    this.FCTraveller["traveller_action_taken"] = new FormControl('', [Validators.required]);
-    this.FCTraveller["traveller_checkup_date"] = new FormControl('', [Validators.required]);
-    this.FCTraveller["_identity_number"] = new FormControl(this.retrievedData?._traveller_Id ?? '');
+    this.FCCheckup["traveller_body_temperature"] = new FormControl('', [Validators.required]);
+    this.FCCheckup["traveller_case_classification"] = new FormControl('', [Validators.required]);
+    this.FCCheckup["traveller_action_taken"] = new FormControl('', [Validators.required]);
+    this.FCCheckup["traveller_checkup_date"] = new FormControl('', [Validators.required]);
+    this.FCCheckup["_identity_number"] = new FormControl(this.retrievedData?._traveller_Id ?? '');
 
   }
 
@@ -114,7 +112,4 @@ export class CheckUpComponent implements OnInit {
   toggleCard() {
     this.showCard = !this.showCard;
   }
-
-  // protected readonly Object = Object;
-  // protected readonly Object = Object;
 }
