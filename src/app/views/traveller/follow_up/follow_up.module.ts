@@ -30,37 +30,39 @@ import { ChartjsModule } from '@coreui/angular-chartjs';
 
 import { FollowUpRoutingModule } from './follow_up-routing.module';
 import { FollowUpComponent } from './follow_up.component';
+import {MatIconModule} from "@angular/material/icon";
 
 @NgModule({
-  imports: [
-    FollowUpRoutingModule,
-    CardModule,
-    NavModule,
-    IconModule,
-    TabsModule,
-    CommonModule,
-    GridModule,
-    ProgressModule,
-    ReactiveFormsModule,
-    ButtonModule,
-    FormModule,
-    ButtonModule,
-    ButtonGroupModule,
-    ChartjsModule,
-    AvatarModule,
-    TableModule,
-    HighchartsChartModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSliderModule,
-    MatSelectModule,
-    MatGridListModule,
-    MatCardModule,
-    MatButtonModule,
-    FormsModule
-  ],
+    imports: [
+        FollowUpRoutingModule,
+        CardModule,
+        NavModule,
+        IconModule,
+        TabsModule,
+        CommonModule,
+        GridModule,
+        ProgressModule,
+        ReactiveFormsModule,
+        ButtonModule,
+        FormModule,
+        ButtonModule,
+        ButtonGroupModule,
+        ChartjsModule,
+        AvatarModule,
+        TableModule,
+        HighchartsChartModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSliderModule,
+        MatSelectModule,
+        MatGridListModule,
+        MatCardModule,
+        MatButtonModule,
+        FormsModule,
+        MatIconModule
+    ],
   declarations: [FollowUpComponent]
 })
 export class FollowUpModule {

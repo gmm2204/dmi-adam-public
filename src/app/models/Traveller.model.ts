@@ -33,31 +33,22 @@ export class Traveller {
       });
   }
 
-  createChecku() {
-    console.log("doc", this.doc);
-    console.log("Id ",this._identity_number);
-    this.api.request(api_config.ENDPOINT_TRAVELLER + "/create-checkup",
-      {
-        "_traveller_id": this._identity_number,
-        "doc": this.doc,
-      },
-      (response: any) => {
-        this._api_response = response[0];
-        this._processing = false;
-      });
-  }
-
   getTravellerInstance(): Promise<any> {
     return new Promise((resolve, reject) => {
-      this.api.request(api_config.ENDPOINT_TRAVELLER + "/acquire/instance",
-        {
-          "_id": this._id
-        }, (response: any) => {
-
-          this._api_response = response;
-          this._processing = false;
-          resolve(response);
-        });
+      try {
+        this.api.request(api_config.ENDPOINT_TRAVELLER + "/acquire/instance",
+          {
+            "_id": this._id
+          }, (response: any) => {
+            console.log('Response', response);
+            this._api_response = response;
+            this._processing = false;
+            resolve(response);
+          });
+      } catch (error) {
+        console.error('Error during getTravellerInstance:', error);
+        reject(error);
+      }
     });
   }
 
@@ -69,6 +60,20 @@ export class Traveller {
           "doc": this.doc,
         }, (response: any) => {
 
+          this._api_response = response;
+          this._processing = false;
+          resolve(response);
+        });
+    });
+  }
+
+  createFollowup(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.api.request(api_config.ENDPOINT_TRAVELLER + "/create-followup",
+        {
+          "_traveller_id": this._id,
+          "doc": this.doc,
+        }, (response: any) => {
           this._api_response = response;
           this._processing = false;
           resolve(response);
