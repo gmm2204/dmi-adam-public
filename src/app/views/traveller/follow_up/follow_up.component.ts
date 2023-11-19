@@ -51,12 +51,13 @@ export class FollowUpComponent implements OnInit {
 
     if (is_valid) {
       this.TravellerInstance._processing = true;
+      this.TravellerInstance._processing = true;
+      this.resetFormControls(this.FCFollowup);
       this.TravellerInstance.getTravellerInstance()
         .then((response) => {
           this.retrievedData = response[0];
           this.TravellerInstance._api_response = response[0];
           this.TravellerInstance._identity_number = this.retrievedData??['_id'] ?? '';
-          this.seedFollowupFormControls()
         })
         .catch((error) => {
           console.error("Error:", error);
@@ -92,9 +93,9 @@ export class FollowUpComponent implements OnInit {
           this.followupUpData = response;
           this.FollowupInstance._processing = false;
           if(this.followupUpData[1] == 1){
-            this.seedFollowupFormControls()
             this.showCard = false;
             this.showFollowups = false;
+            this.resetFormControls(this.FCFollowup);
           }
           console.log('FollowupInstanceResponse', response)
           // this.FollowupInstance._identity_number = this.retrievedData['_id'] ?? '';
@@ -141,6 +142,12 @@ export class FollowUpComponent implements OnInit {
 
   toggleFollowupDetails(index: number) {
     this.minimizedStates[index] = !this.minimizedStates[index];
+  }
+
+  resetFormControls(formControls: KVFormControl): void {
+    Object.values(formControls).forEach(control => {
+      control.reset();
+    });
   }
 
 }

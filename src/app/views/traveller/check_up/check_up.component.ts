@@ -57,13 +57,13 @@ export class CheckUpComponent implements OnInit {
 
     if (is_valid) {
       this.TravellerInstance._processing = true;
+      this.resetFormControls(this.FCCheckup);
       this.TravellerInstance.getTravellerInstance()
         .then((response) => {
           this.retrievedData = response[0];
           console.log('this.retrievedData: ',this.retrievedData)
           this.TravellerInstance._api_response = response[0];
           this.TravellerInstance._identity_number = this.retrievedData??['_id'] ?? '';
-          // this.seedCheckupFormControls();
         })
         .catch((error) => {
           console.error("Get TravellerInstance Error:", error);
@@ -97,13 +97,13 @@ export class CheckUpComponent implements OnInit {
       if(this.checkUpData){
 
         //update an existing checkup
-        console.log('we update')
-        //create a new checkup
         this.CheckupInstance.updateCheckup()
           .then((response) => {
             this.retrievedData = response[0];
 
             this.CheckupInstance._traveller_id = this.retrievedData['_id'] ?? '';
+            this.showCard = false;
+            this.resetFormControls(this.FCCheckup);
           })
           .catch((error) => {
             console.error("Error:", error);
@@ -115,8 +115,9 @@ export class CheckUpComponent implements OnInit {
         this.CheckupInstance.createCheckup()
           .then((response) => {
             this.retrievedData = response[0];
-
             this.CheckupInstance._traveller_id = this.retrievedData['_id'] ?? '';
+            this.showCard = false;
+            this.resetFormControls(this.FCCheckup);
           })
           .catch((error) => {
             console.error("Error:", error);
@@ -138,6 +139,13 @@ export class CheckUpComponent implements OnInit {
     this.FCCheckup["traveller_checkup_date"] = new FormControl('', [Validators.required]);
     this.FCCheckup["_identity_number"] = new FormControl(this.retrievedData?._traveller_Id ?? '');
   }
+
+  resetFormControls(formControls: KVFormControl): void {
+    Object.values(formControls).forEach(control => {
+      control.reset();
+    });
+  }
+
 
   protected readonly Object = Object;
 
