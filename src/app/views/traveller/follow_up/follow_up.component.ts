@@ -3,8 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { FormControl, Validators } from '@angular/forms';
 
 import { MErrorStateMatcher } from '../../../models/MErrorStateMatcher.model';
-import { Traveller } from '../../../models/Traveller.model';
+import {Traveller} from '../../../models/Traveller.model';
 import { KVFormControl } from '../../../models/KVFormControl.model';
+import {Followup} from "../../../models/followup.model";
 
 @Component({
   templateUrl: 'follow_up.component.html',
@@ -18,9 +19,20 @@ export class FollowUpComponent implements OnInit {
   FCFollowup: KVFormControl = {};
   retrievedData: any;
   showCard: boolean = true;
+  showFollowups: boolean = true;
   protected readonly Object = Object;
+  minimizedStates: boolean[] = [];
+  FollowupInstance = new Followup(this.http);
+  followupUpData: any;
 
   constructor(private http: HttpClient) { }
+
+  items = [
+    { firstName: 'Elvis', lastName: 'Otieno' },
+    { firstName: 'John', lastName: 'Die' },
+    { firstName: 'dfghjk', lastName: 'fghjn' },
+    // ... more items
+  ];
 
   ngOnInit(): void {
     this.seedFormControls();
@@ -42,12 +54,23 @@ export class FollowUpComponent implements OnInit {
       this.TravellerInstance.getTravellerInstance()
         .then((response) => {
           this.retrievedData = response[0];
-
-          this.TravellerInstance._identity_number = this.retrievedData['_id'] ?? '';
+          this.TravellerInstance._api_response = response[0];
+          this.TravellerInstance._identity_number = this.retrievedData??['_id'] ?? '';
           this.seedFollowupFormControls()
         })
         .catch((error) => {
           console.error("Error:", error);
+        });
+
+      this.FollowupInstance._traveller_id = this.TravellerInstance._id;
+      this.FollowupInstance.getTravellerFollowup()
+        .then((checkUpResponse) => {
+          this.followupUpData = checkUpResponse;
+          console.log('this.TravellerInstance', this.TravellerInstance._api_response)
+
+        })
+        .catch((error) => {
+          console.error("Get CheckupInstance Error:", error);
         });
     }
   }
@@ -55,7 +78,6 @@ export class FollowUpComponent implements OnInit {
   onSubmitFollowup(): void {
     let is_valid = true;
 
-    console.log(this.TravellerInstance)
     Object.keys(this.FCFollowup).forEach(fc_key => {
       if (this.FCFollowup[fc_key].hasError("required")) {
         is_valid = false;
@@ -64,16 +86,24 @@ export class FollowUpComponent implements OnInit {
     });
 
     if (is_valid) {
-      this.TravellerInstance._processing = true;
-      this.TravellerInstance.createFollowup()
+      this.FollowupInstance._processing = true;
+      this.FollowupInstance.createFollowup()
         .then((response) => {
-          this.retrievedData = response[0];
-
-          this.TravellerInstance._identity_number = this.retrievedData['_id'] ?? '';
+          this.followupUpData = response;
+          this.FollowupInstance._processing = false;
+          if(this.followupUpData[1] == 1){
+            this.seedFollowupFormControls()
+            this.showCard = false;
+            this.showFollowups = false;
+          }
+          console.log('FollowupInstanceResponse', response)
+          // this.FollowupInstance._identity_number = this.retrievedData['_id'] ?? '';
         })
         .catch((error) => {
           console.error("Error:", error);
         });
+
+
     }
   }
 
@@ -104,4 +134,13 @@ export class FollowUpComponent implements OnInit {
   toggleCard() {
     this.showCard = !this.showCard;
   }
+
+  toggleFollowUps() {
+    this.showFollowups = !this.showFollowups;
+  }
+
+  toggleFollowupDetails(index: number) {
+    this.minimizedStates[index] = !this.minimizedStates[index];
+  }
+
 }

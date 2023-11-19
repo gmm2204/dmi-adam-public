@@ -29,11 +29,15 @@
 
   <div *ngIf="TravellerInstance._processing" class="fade show p-4" style="text-align: left;">
     <i class="spinner-grow spinner-grow-sm"></i>
-    <span class="m-1">Loading...</span>
+    <span class="m-1">Fetching...</span>
   </div>
 
   <div class="view-padding--vertical" *ngIf="!TravellerInstance._api_response">
     <i class="fa fa-exclamation-circle view-color--red"></i> Traveller not found.
+  </div>
+
+  <div class="view-padding--vertical" *ngIf="TravellerInstance?._api_error">
+    <i class="fa fa-exclamation-circle view-color--red"></i> {{ TravellerInstance._api_error }}
   </div>
 
   <div>
@@ -202,7 +206,7 @@
 
         <mat-form-field >
           <input matInput type="number" [formControl]="FCCheckup['traveller_body_temperature']" [errorStateMatcher]="matcher"
-                 [(ngModel)]="TravellerInstance.traveller_body_temperature" inputMode="numeric">
+                 [(ngModel)]="CheckupInstance.doc['traveller_body_temperature']" inputMode="numeric">
 
           <mat-error *ngIf="FCCheckup['traveller_body_temperature'].hasError('required')">
             <strong>Required</strong>
@@ -214,7 +218,7 @@
         <p>Case Classification</p>
 
         <mat-form-field>
-          <mat-select [(ngModel)]="TravellerInstance.doc['traveller_case_classification']"
+          <mat-select [(ngModel)]="CheckupInstance.doc['traveller_case_classification']"
                       [formControl]="FCCheckup['traveller_case_classification']" [errorStateMatcher]="matcher"
                       name="traveller_case_classification">
             <mat-option *ngFor="let case_classification of case_classifications" [value]="case_classification.value">
@@ -234,7 +238,7 @@
         <p>Case Classification *</p>
 
         <mat-form-field>
-          <mat-select [(ngModel)]="TravellerInstance.doc['traveller_action_taken']"
+          <mat-select [(ngModel)]="CheckupInstance.doc['traveller_action_taken']"
                       [formControl]="FCCheckup['traveller_action_taken']" [errorStateMatcher]="matcher"
                       name="traveller_action_taken">
             <mat-option *ngFor="let taken_action of taken_actions" [value]="taken_action.value">
@@ -247,7 +251,7 @@
           </mat-error>
         </mat-form-field>
 
-        <mat-form-field *ngIf="TravellerInstance.doc['traveller_action_taken'] === 'other'">
+        <mat-form-field *ngIf="CheckupInstance.doc['traveller_action_taken'] === 'other'">
           <input matInput placeholder="Other action"
                  [formControl]="FCCheckup['traveller_action_taken']" [errorStateMatcher]="matcher"
                  name="traveller_action_taken"> Describe here
@@ -257,7 +261,7 @@
       <c-col>
         <p>Checkup Date *</p>
         <mat-form-field class="example-full-width">
-          <input matInput [matDatepicker]="traveller_checkup_date" [(ngModel)]="TravellerInstance.doc['traveller_checkup_date']"
+          <input matInput [matDatepicker]="traveller_checkup_date" [(ngModel)]="CheckupInstance.doc['traveller_checkup_date']"
                  [formControl]="FCCheckup['traveller_checkup_date']" [errorStateMatcher]="matcher">
 
           <mat-datepicker-toggle matSuffix [for]="traveller_checkup_date">
@@ -275,12 +279,18 @@
 
     <div class="view-align--right">
 
-      <div class="view-padding--vertical" *ngIf="TravellerInstance._api_response[1] == '1'">
+      <div *ngIf="CheckupInstance._processing" class="fade show p-4" style="text-align: left;">
+        <i class="spinner-grow spinner-grow-sm"></i>
+        <span class="m-1">Submitting...</span>
+      </div>
+
+<!--      <div class="view-padding&#45;&#45;vertical" *ngIf="CheckupInstance._api_response[1] == '1'">-->
+      <div class="view-padding--vertical" *ngIf="CheckupInstance._api_response[1]">
         <i class="fa fa-check-circle view-color--green"></i> Details submitted successfully
       </div>
 
       <button type="submit" form="form_traveller_checkup" mat-raised-button color="primary"
-              *ngIf="TravellerInstance._api_response[1] != '1'">
+              *ngIf="CheckupInstance._api_response[1] != '1'">
         Submit
       </button>
     </div>
