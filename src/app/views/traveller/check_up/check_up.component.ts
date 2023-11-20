@@ -59,6 +59,7 @@ export class CheckUpComponent implements OnInit {
     if (is_valid) {
       this.TravellerInstance._processing = true;
       this.resetFormControls(this.FCCheckup);
+      // this.seedCheckupFormControls();
       this.TravellerInstance.getTravellerInstance()
         .then((response) => {
           this.retrievedData = response[0];
@@ -75,7 +76,10 @@ export class CheckUpComponent implements OnInit {
       this.CheckupInstance.getTravellerCheckup()
         .then((checkUpResponse) => {
           this.checkUpData = checkUpResponse[0];
-          this.CheckupInstance.doc = this.checkUpData?.doc;
+          if(this.checkUpData){
+            this.CheckupInstance.doc = this.checkUpData?.doc;
+          }
+
         })
         .catch((error) => {
           console.error("Get CheckupInstance Error:", error);
