@@ -20,6 +20,7 @@ export class CheckUpComponent implements OnInit {
   FCTraveller: KVFormControl = {};
   FCCheckup: KVFormControl = {};
   retrievedData: any;
+  travellerData: any;
   checkUpData: any;
   showCard: boolean = true;
 
@@ -61,6 +62,7 @@ export class CheckUpComponent implements OnInit {
       this.TravellerInstance.getTravellerInstance()
         .then((response) => {
           this.retrievedData = response[0];
+          this.travellerData = response[0];
           console.log('this.retrievedData: ',this.retrievedData)
           this.TravellerInstance._api_response = response[0];
           this.TravellerInstance._identity_number = this.retrievedData??['_id'] ?? '';
@@ -94,6 +96,9 @@ export class CheckUpComponent implements OnInit {
 
     if (is_valid) {
       this.CheckupInstance._processing = true;
+      // this.onValueChange();
+      // console.log(this.FCCheckup['traveller_action_taken']);
+
       if(this.checkUpData){
 
         //update an existing checkup
@@ -137,12 +142,29 @@ export class CheckUpComponent implements OnInit {
     this.FCCheckup["traveller_case_classification"] = new FormControl('', [Validators.required]);
     this.FCCheckup["traveller_action_taken"] = new FormControl('', [Validators.required]);
     this.FCCheckup["traveller_checkup_date"] = new FormControl('', [Validators.required]);
+    this.FCCheckup["traveller_other_action_taken"] = new FormControl('', []);
     this.FCCheckup["_identity_number"] = new FormControl(this.retrievedData?._traveller_Id ?? '');
+  }
+
+  onValueChange(): void {
+    const actionTakenControl = this.FCCheckup['traveller_action_taken'];
+    const selectedValue = this.CheckupInstance.doc['traveller_action_taken'];
+
+    if (actionTakenControl.value === 'other') {
+      this.FCCheckup['traveller_action_taken'].setValue(this.FCCheckup['traveller_other_action_taken'].value);
+    } else {
+      // Clear the validation for other options
+
+    }
+
+    // Trigger validation
+    actionTakenControl.updateValueAndValidity();
   }
 
   resetFormControls(formControls: KVFormControl): void {
     Object.values(formControls).forEach(control => {
       control.reset();
+      control.setErrors(null);
     });
   }
 

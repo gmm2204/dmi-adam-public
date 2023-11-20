@@ -24,15 +24,11 @@ export class FollowUpComponent implements OnInit {
   minimizedStates: boolean[] = [];
   FollowupInstance = new Followup(this.http);
   followupUpData: any;
+  previousFollowupData: any;
+  submitFollowupResponse: number = 0;
 
   constructor(private http: HttpClient) { }
 
-  items = [
-    { firstName: 'Elvis', lastName: 'Otieno' },
-    { firstName: 'John', lastName: 'Die' },
-    { firstName: 'dfghjk', lastName: 'fghjn' },
-    // ... more items
-  ];
 
   ngOnInit(): void {
     this.seedFormControls();
@@ -67,7 +63,7 @@ export class FollowUpComponent implements OnInit {
       this.FollowupInstance.getTravellerFollowup()
         .then((checkUpResponse) => {
           this.followupUpData = checkUpResponse;
-          console.log('this.TravellerInstance', this.TravellerInstance._api_response)
+          this.previousFollowupData = checkUpResponse;
 
         })
         .catch((error) => {
@@ -95,14 +91,36 @@ export class FollowUpComponent implements OnInit {
           if(this.followupUpData[1] == 1){
             this.showCard = false;
             this.showFollowups = false;
+            this.submitFollowupResponse = 1;
             this.resetFormControls(this.FCFollowup);
+
+            this.FollowupInstance._traveller_id = this.TravellerInstance._id;
+            this.FollowupInstance.getTravellerFollowup()
+              .then((checkUpResponse) => {
+                this.previousFollowupData = checkUpResponse;
+                console.log('22previousFollowupData onSubmit getFollow', this.previousFollowupData);
+
+              })
+              .catch((error) => {
+                console.error("Get CheckupInstance Error:", error);
+              });
           }
-          console.log('FollowupInstanceResponse', response)
           // this.FollowupInstance._identity_number = this.retrievedData['_id'] ?? '';
         })
         .catch((error) => {
           console.error("Error:", error);
         });
+
+      // this.FollowupInstance._traveller_id = this.TravellerInstance._id;
+      // this.FollowupInstance.getTravellerFollowup()
+      //   .then((checkUpResponse) => {
+      //     this.previousFollowupData = checkUpResponse;
+      //     console.log('22previousFollowupData onSubmit getFollow', this.previousFollowupData);
+      //
+      //   })
+      //   .catch((error) => {
+      //     console.error("Get CheckupInstance Error:", error);
+      //   });
 
 
     }
@@ -147,6 +165,7 @@ export class FollowUpComponent implements OnInit {
   resetFormControls(formControls: KVFormControl): void {
     Object.values(formControls).forEach(control => {
       control.reset();
+      control.setErrors(null);
     });
   }
 

@@ -206,7 +206,7 @@
 
 
   <ng-container *ngIf="showFollowups" >
-    <mat-card style="padding: 20px;" class="mb-2" *ngFor="let item of followupUpData; let i = index">
+    <mat-card style="padding: 20px;" class="mb-2" *ngFor="let item of previousFollowupData; let i = index">
       <div class="index-container">
 
         <button mat-icon-button color="primary" (click)="toggleFollowupDetails(i)">
@@ -445,9 +445,9 @@
         <span class="m-1">Submitting...</span>
       </div>
 
-      <div class="view-padding--vertical" *ngIf="FollowupInstance._api_response[1] == '1'">
-        <i class="fa fa-check-circle view-color--green"></i> Details submitted successfully
-      </div>
+<!--      <div class="view-padding&#45;&#45;vertical" *ngIf="FollowupInstance._api_response[1] == '1'">-->
+<!--        <i class="fa fa-check-circle view-color&#45;&#45;green"></i> Details submitted successfully-->
+<!--      </div>-->
 
       <div class="view-padding--vertical" *ngIf="FollowupInstance._api_response['result'] == '-1'">
         <i class="fa fa-exclamation-circle view-color--red"></i> Failed! Kindly check and try again, if you had submitted
@@ -462,3 +462,7 @@
   </form>
 </div>
 
+
+<div class="view-padding--vertical view-align--right" *ngIf="submitFollowupResponse == 1">
+  <i class="fa fa-check-circle view-color--green"></i> Details submitted successfully
+</div>
