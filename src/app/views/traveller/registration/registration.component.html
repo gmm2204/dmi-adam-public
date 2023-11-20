@@ -571,6 +571,10 @@
       <i class="fa fa-check-circle view-color--green"></i> Details submitted successfully
     </div>
 
+    <div class="view-padding--vertical" *ngIf="TravellerInstance?._api_error">
+      <i class="fa fa-exclamation-circle view-color--red"></i> {{ TravellerInstance._api_error }}
+    </div>
+
     <div class="view-padding--vertical" *ngIf="TravellerInstance._api_response['result'] == '-1'">
       <i class="fa fa-exclamation-circle view-color--red"></i> Failed! Kindly check and try again, if you had submitted
       your information before retrieve them ~here~.

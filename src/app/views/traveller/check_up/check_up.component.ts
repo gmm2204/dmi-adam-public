@@ -3,7 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { FormControl, Validators } from '@angular/forms';
 
 import { MErrorStateMatcher } from '../../../models/MErrorStateMatcher.model';
-import { Traveller } from '../../../models/Traveller.model';
+import {Traveller} from '../../../models/Traveller.model';
+import {CheckUp} from '../../../models/Checkup.model';
 import { KVFormControl } from '../../../models/KVFormControl.model';
 
 
@@ -15,10 +16,11 @@ import { KVFormControl } from '../../../models/KVFormControl.model';
 export class CheckUpComponent implements OnInit {
   matcher = new MErrorStateMatcher();
   TravellerInstance = new Traveller(this.http);
-  CheckupInstance = new Traveller(this.http);
+  CheckupInstance = new CheckUp(this.http);
   FCTraveller: KVFormControl = {};
   FCCheckup: KVFormControl = {};
   retrievedData: any;
+  checkUpData: any;
   showCard: boolean = true;
 
   case_classifications = [
@@ -55,17 +57,28 @@ export class CheckUpComponent implements OnInit {
 
     if (is_valid) {
       this.TravellerInstance._processing = true;
+      this.resetFormControls(this.FCCheckup);
       this.TravellerInstance.getTravellerInstance()
         .then((response) => {
           this.retrievedData = response[0];
+          console.log('this.retrievedData: ',this.retrievedData)
           this.TravellerInstance._api_response = response[0];
-
-          this.TravellerInstance._identity_number = this.retrievedData['_id'] ?? '';
-          this.seedCheckupFormControls();
+          this.TravellerInstance._identity_number = this.retrievedData??['_id'] ?? '';
         })
         .catch((error) => {
-          console.error("Error:", error);
+          console.error("Get TravellerInstance Error:", error);
         });
+
+      this.CheckupInstance._traveller_id = this.TravellerInstance._id;
+      this.CheckupInstance.getTravellerCheckup()
+        .then((checkUpResponse) => {
+          this.checkUpData = checkUpResponse[0];
+          this.CheckupInstance.doc = this.checkUpData?.doc;
+        })
+        .catch((error) => {
+          console.error("Get CheckupInstance Error:", error);
+        });
+
     }
   }
 
@@ -80,16 +93,37 @@ export class CheckUpComponent implements OnInit {
     });
 
     if (is_valid) {
-      this.TravellerInstance._processing = true;
-      this.TravellerInstance.createCheckup()
-        .then((response) => {
-          this.retrievedData = response[0];
+      this.CheckupInstance._processing = true;
+      if(this.checkUpData){
 
-          this.TravellerInstance._identity_number = this.retrievedData['_id'] ?? '';
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-        });
+        //update an existing checkup
+        this.CheckupInstance.updateCheckup()
+          .then((response) => {
+            this.retrievedData = response[0];
+
+            this.CheckupInstance._traveller_id = this.retrievedData['_id'] ?? '';
+            this.showCard = false;
+            this.resetFormControls(this.FCCheckup);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+
+      }else {
+        console.log('we create')
+        //create a new checkup
+        this.CheckupInstance.createCheckup()
+          .then((response) => {
+            this.retrievedData = response[0];
+            this.CheckupInstance._traveller_id = this.retrievedData['_id'] ?? '';
+            this.showCard = false;
+            this.resetFormControls(this.FCCheckup);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+
+      }
     }
   }
 
@@ -104,8 +138,14 @@ export class CheckUpComponent implements OnInit {
     this.FCCheckup["traveller_action_taken"] = new FormControl('', [Validators.required]);
     this.FCCheckup["traveller_checkup_date"] = new FormControl('', [Validators.required]);
     this.FCCheckup["_identity_number"] = new FormControl(this.retrievedData?._traveller_Id ?? '');
-
   }
+
+  resetFormControls(formControls: KVFormControl): void {
+    Object.values(formControls).forEach(control => {
+      control.reset();
+    });
+  }
+
 
   protected readonly Object = Object;
 

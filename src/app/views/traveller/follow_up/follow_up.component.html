@@ -10,14 +10,14 @@
 <br />
 
 <form class="view-form" name="form_traveller_fu_acquire" id="form_traveller_fu_acquire" (ngSubmit)="onSubmit()"
-  #NewTraveller="ngForm" >
+      #NewTraveller="ngForm" >
   <c-row>
     <c-col>
       <p>Traveller Number *</p>
 
       <mat-form-field>
         <input matInput [formControl]="FCTraveller['_id']" [errorStateMatcher]="matcher"
-          [(ngModel)]="TravellerInstance._id">
+               [(ngModel)]="TravellerInstance._id">
 
         <mat-error *ngIf="FCTraveller['_id'].hasError('required')">
           <strong>Required</strong>
@@ -27,8 +27,17 @@
     <c-col></c-col>
   </c-row>
 
+  <div *ngIf="TravellerInstance._processing" class="fade show p-4" style="text-align: left;">
+    <i class="spinner-grow spinner-grow-sm"></i>
+    <span class="m-1">Fetching...</span>
+  </div>
+
   <div class="view-padding--vertical" *ngIf="!TravellerInstance._api_response">
     <i class="fa fa-exclamation-circle view-color--red"></i> Traveller not found.
+  </div>
+
+  <div class="view-padding--vertical" *ngIf="TravellerInstance._api_error">
+    <i class="fa fa-exclamation-circle view-color--red"></i> {{ TravellerInstance._api_error }}
   </div>
 
   <div>
@@ -38,8 +47,7 @@
   </div>
 </form>
 
-<div *ngIf="retrievedData && Object.keys(retrievedData).length > 0">
-
+<div class="mb-2" *ngIf="retrievedData && Object.keys(retrievedData).length > 0">
   <mat-card>
     <mat-card-header>
       <mat-card-title>
@@ -187,8 +195,81 @@
 </div>
 
 
+<div class="mt-2" *ngIf="retrievedData && Object.keys(retrievedData).length > 0">
+  <div class="index-container">
+    <button mat-icon-button color="primary"  (click)="toggleFollowUps()">
+      <mat-icon>{{ showFollowups ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</mat-icon>
+    </button>
+
+    <h2 style="padding: 20px;">Previous Followups</h2>
+  </div>
+
+
+  <ng-container *ngIf="showFollowups" >
+    <mat-card style="padding: 20px;" class="mb-2" *ngFor="let item of followupUpData; let i = index">
+      <div class="index-container">
+
+        <button mat-icon-button color="primary" (click)="toggleFollowupDetails(i)">
+          <mat-icon>{{ minimizedStates[i] ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</mat-icon>
+        </button>
+        <div># </div>
+        <div>{{ i + 1 }}</div>
+      </div>
+
+      <mat-card-content class="p-2" *ngIf="minimizedStates[i]">
+        <div class="two-column-container">
+          <div class="column">
+            <div class="label">Fever:</div>
+            <div class="data">{{ item.doc.traveller_fever }}</div>
+
+            <div class="label">Headache:</div>
+            <div class="data">{{ item.doc.traveller_headache }}</div>
+
+            <div class="label">Bonepain:</div>
+            <div class="data">{{ item.doc.traveller_bone_pain }}</div>
+
+            <div class="label">Unexplained Bruising:</div>
+            <div class="data">{{ item.doc.traveller_unexplained_bruising }}</div>
+          </div>
+
+          <div class="column">
+            <div class="label">Diarrhoea:</div>
+            <div class="data">{{ item.doc.traveller_diarrhoea }}</div>
+
+            <div class="label">Common cold:</div>
+            <div class="data">{{ item.doc.traveller_common_cold }}</div>
+
+            <div class="label">Weight loss:</div>
+            <div class="data">{{ item.doc.traveller_weight_loss }}</div>
+
+            <div class="label">Unusual body weakness:</div>
+            <div class="data">{{ item.doc.traveller_unusual_body_weakness }}</div>
+          </div>
+
+          <div class="column">
+            <div class="label">Cough / Vomiting:</div>
+            <div class="data">{{ item.doc.traveller_cough_vomiting }}</div>
+
+            <div class="label">Joint Pain / Muscle Pain:</div>
+            <div class="data">{{ item.doc.traveller_joint_muscle_pains }}</div>
+
+            <div class="label">Sore throat:</div>
+            <div class="data">{{ item.doc.traveller_sore_painful_throat }}</div>
+
+            <div class="label">Internal / External bleeding:</div>
+            <div class="data">{{ item.doc.traveller_internal_external_bleeding }}</div>
+          </div>
+
+
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </ng-container>
+
+</div>
+
 <div *ngIf="retrievedData && Object.keys(retrievedData).length > 0">
-<!--<div >-->
+  <!--<div >-->
   <form class="view-form" name="form_traveller_followup" id="form_traveller_followup" (ngSubmit)="onSubmitFollowup()"
         #NewTraveller="ngForm">
     <c-row>
@@ -197,7 +278,7 @@
       <c-col>
         <p>Fever or hotness of the body *</p>
         <mat-form-field>
-          <mat-select [(ngModel)]="TravellerInstance.doc['traveller_fever']"
+          <mat-select [(ngModel)]="FollowupInstance.doc['traveller_fever']"
                       [formControl]="FCFollowup['traveller_fever']" [errorStateMatcher]="matcher">
             <mat-option value="yes">Yes</mat-option>
             <mat-option value="no">No</mat-option>
@@ -208,7 +289,7 @@
       <c-col>
         <p>Diarrhea *</p>
         <mat-form-field>
-          <mat-select [(ngModel)]="TravellerInstance.doc['traveller_diarrhoea']"
+          <mat-select [(ngModel)]="FollowupInstance.doc['traveller_diarrhoea']"
                       [formControl]="FCFollowup['traveller_diarrhoea']" [errorStateMatcher]="matcher">
             <mat-option value="yes">Yes</mat-option>
             <mat-option value="no">No</mat-option>
@@ -222,7 +303,7 @@
         <p>Headache *</p>
 
         <mat-form-field>
-          <mat-select [(ngModel)]="TravellerInstance.doc['traveller_headache']"
+          <mat-select [(ngModel)]="FollowupInstance.doc['traveller_headache']"
                       [formControl]="FCFollowup['traveller_headache']" [errorStateMatcher]="matcher">
             <mat-option value="yes">Yes</mat-option>
             <mat-option value="no">No</mat-option>
@@ -233,7 +314,7 @@
       <c-col>
         <p>Joint and Muscle pains *</p>
         <mat-form-field>
-          <mat-select [(ngModel)]="TravellerInstance.doc['traveller_joint_muscle_pains']"
+          <mat-select [(ngModel)]="FollowupInstance.doc['traveller_joint_muscle_pains']"
                       [formControl]="FCFollowup['traveller_joint_muscle_pains']" [errorStateMatcher]="matcher">
             <mat-option value="yes">Yes</mat-option>
             <mat-option value="no">No</mat-option>
@@ -246,7 +327,7 @@
       <c-col>
         <p>Bone Pain *</p>
         <mat-form-field>
-          <mat-select [(ngModel)]="TravellerInstance.doc['traveller_bone_pain']"
+          <mat-select [(ngModel)]="FollowupInstance.doc['traveller_bone_pain']"
                       [formControl]="FCFollowup['traveller_bone_pain']" [errorStateMatcher]="matcher">
             <mat-option value="yes">Yes</mat-option>
             <mat-option value="no">No</mat-option>
@@ -258,7 +339,7 @@
         <p>Unexplained Bruising *</p>
 
         <mat-form-field>
-          <mat-select [(ngModel)]="TravellerInstance.doc['traveller_unexplained_bruising']"
+          <mat-select [(ngModel)]="FollowupInstance.doc['traveller_unexplained_bruising']"
                       [formControl]="FCFollowup['traveller_unexplained_bruising']" [errorStateMatcher]="matcher">
             <mat-option value="yes">Yes</mat-option>
             <mat-option value="no">No</mat-option>
@@ -272,7 +353,7 @@
         <p>Unusual body weakness *</p>
 
         <mat-form-field>
-          <mat-select [(ngModel)]="TravellerInstance.doc['traveller_unusual_body_weakness']"
+          <mat-select [(ngModel)]="FollowupInstance.doc['traveller_unusual_body_weakness']"
                       [formControl]="FCFollowup['traveller_unusual_body_weakness']" [errorStateMatcher]="matcher">
             <mat-option value="yes">Yes</mat-option>
             <mat-option value="no">No</mat-option>
@@ -284,7 +365,7 @@
         <p>Internal and external bleeding *</p>
 
         <mat-form-field>
-          <mat-select [(ngModel)]="TravellerInstance.doc['traveller_internal_external_bleeding']"
+          <mat-select [(ngModel)]="FollowupInstance.doc['traveller_internal_external_bleeding']"
                       [formControl]="FCFollowup['traveller_internal_external_bleeding']" [errorStateMatcher]="matcher">
             <mat-option value="yes">Yes</mat-option>
             <mat-option value="no">No</mat-option>
@@ -298,7 +379,7 @@
         <p>Soreness or pain in the throat *</p>
 
         <mat-form-field>
-          <mat-select [(ngModel)]="TravellerInstance.doc['traveller_sore_painful_throat']"
+          <mat-select [(ngModel)]="FollowupInstance.doc['traveller_sore_painful_throat']"
                       [formControl]="FCFollowup['traveller_sore_painful_throat']" [errorStateMatcher]="matcher">
             <mat-option value="yes">Yes</mat-option>
             <mat-option value="no">No</mat-option>
@@ -310,7 +391,7 @@
         <p>Cough and vomiting *</p>
 
         <mat-form-field>
-          <mat-select [(ngModel)]="TravellerInstance.doc['traveller_cough_vomiting']"
+          <mat-select [(ngModel)]="FollowupInstance.doc['traveller_cough_vomiting']"
                       [formControl]="FCFollowup['traveller_cough_vomiting']" [errorStateMatcher]="matcher">
             <mat-option value="yes">Yes</mat-option>
             <mat-option value="no">No</mat-option>
@@ -325,7 +406,7 @@
         <p>Common Cold *</p>
 
         <mat-form-field>
-          <mat-select [(ngModel)]="TravellerInstance.doc['traveller_common_cold']"
+          <mat-select [(ngModel)]="FollowupInstance.doc['traveller_common_cold']"
                       [formControl]="FCFollowup['traveller_common_cold']" [errorStateMatcher]="matcher">
             <mat-option value="yes">Yes</mat-option>
             <mat-option value="no">No</mat-option>
@@ -337,7 +418,7 @@
         <p>Weight Loss *</p>
 
         <mat-form-field>
-          <mat-select [(ngModel)]="TravellerInstance.doc['traveller_weight_loss']"
+          <mat-select [(ngModel)]="FollowupInstance.doc['traveller_weight_loss']"
                       [formControl]="FCFollowup['traveller_weight_loss']" [errorStateMatcher]="matcher">
             <mat-option value="yes">Yes</mat-option>
             <mat-option value="no">No</mat-option>
@@ -353,30 +434,28 @@
 
         <mat-form-field>
           <input matInput [formControl]="FCFollowup['traveller_other_symptoms']" [errorStateMatcher]="matcher"
-                 [(ngModel)]="TravellerInstance.doc['traveller_other_symptoms']">
+                 [(ngModel)]="FollowupInstance.doc['traveller_other_symptoms']">
         </mat-form-field>
       </c-col>
     </c-row>
 
     <div class="view-align--right">
-      <div *ngIf="TravellerInstance._processing" class="fade show p-4" style="text-align: left;">
+      <div *ngIf="FollowupInstance._processing" class="fade show p-4" style="text-align: left;">
         <i class="spinner-grow spinner-grow-sm"></i>
-        <span class="m-1">Loading...</span>
+        <span class="m-1">Submitting...</span>
       </div>
 
-
-      <div class="view-padding--vertical" *ngIf="TravellerInstance._api_response['result'] == '1'">
+      <div class="view-padding--vertical" *ngIf="FollowupInstance._api_response[1] == '1'">
         <i class="fa fa-check-circle view-color--green"></i> Details submitted successfully
-
       </div>
 
-      <div class="view-padding--vertical" *ngIf="TravellerInstance._api_response['result'] == '-1'">
+      <div class="view-padding--vertical" *ngIf="FollowupInstance._api_response['result'] == '-1'">
         <i class="fa fa-exclamation-circle view-color--red"></i> Failed! Kindly check and try again, if you had submitted
         your information before retrieve them ~here~.
       </div>
 
       <button type="submit" form="form_traveller_followup" mat-raised-button color="primary"
-              *ngIf="TravellerInstance._api_response[1] != '1'">
+              *ngIf="FollowupInstance._api_response[1] != '1'">
         Submit
       </button>
     </div>

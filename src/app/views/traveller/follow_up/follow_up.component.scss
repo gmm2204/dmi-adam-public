@@ -11,6 +11,10 @@
   justify-content: space-between;
 }
 
+.index-column {
+  margin-right: 5px;
+}
+
 .column {
   flex: 1;
   padding: 0 10px;
@@ -23,4 +27,11 @@
 
 .data {
   margin-bottom: 15px;
+}
+
+.index-container {
+  display: flex;
+  justify-content: flex-start;
+  margin-left: 4px;
+  align-items: center;
 }
