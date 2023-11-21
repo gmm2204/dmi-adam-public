@@ -64,7 +64,6 @@ export class CheckUpComponent implements OnInit {
         .then((response) => {
           this.retrievedData = response[0];
           this.travellerData = response[0];
-          console.log('this.retrievedData: ',this.retrievedData)
           this.TravellerInstance._api_response = response[0];
           this.TravellerInstance._identity_number = this.retrievedData??['_id'] ?? '';
         })
@@ -100,8 +99,6 @@ export class CheckUpComponent implements OnInit {
 
     if (is_valid) {
       this.CheckupInstance._processing = true;
-      // this.onValueChange();
-      // console.log(this.FCCheckup['traveller_action_taken']);
 
       if(this.checkUpData){
 
@@ -112,7 +109,7 @@ export class CheckUpComponent implements OnInit {
 
             this.CheckupInstance._traveller_id = this.retrievedData['_id'] ?? '';
             this.showCard = false;
-            this.resetFormControls(this.FCCheckup);
+            // this.resetFormControls(this.FCCheckup);
           })
           .catch((error) => {
             console.error("Error:", error);
@@ -126,7 +123,7 @@ export class CheckUpComponent implements OnInit {
             this.retrievedData = response[0];
             this.CheckupInstance._traveller_id = this.retrievedData['_id'] ?? '';
             this.showCard = false;
-            this.resetFormControls(this.FCCheckup);
+            // this.resetFormControls(this.FCCheckup);
           })
           .catch((error) => {
             console.error("Error:", error);
