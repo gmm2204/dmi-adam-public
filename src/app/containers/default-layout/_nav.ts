@@ -2,7 +2,7 @@ import { INavData } from '@coreui/angular';
 
 export const navItems: INavData[] = [
   {
-    name: 'Traveller D',
+    name: 'Traveller',
     url: '/traveller',
     icon: 'fa fa-plane-arrival',
     class: 'view-drawer--link',
